@@ -5,9 +5,9 @@ module CartoDB
 
       attr_accessor :configuration
 
-      def_delegators :configuration, [:protocol, :domain, :api_key,
+      def_delegators :configuration, :protocol, :domain, :api_key,
                                       :account, :base_url, :version,
-                                      :timeout]
+                                      :timeout
 
       def initialize(configuration)
         self.configuration = configuration
