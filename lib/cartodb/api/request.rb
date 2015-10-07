@@ -6,8 +6,7 @@ module CartoDB
       attr_accessor :configuration
 
       def_delegators :configuration, :protocol, :domain, :api_key,
-                                      :account, :base_url, :version,
-                                      :timeout
+                     :account, :base_url, :version, :timeout
 
       def initialize(configuration)
         self.configuration = configuration
@@ -105,7 +104,8 @@ module CartoDB
 
         is_faraday_exception = exception.is_a?(Faraday::Error::ClientError)
         if is_faraday_exception && exception.response
-          cartodb_exception = build_error_from_faraday(cartodb_exception, exception)
+          cartodb_exception = build_error_from_faraday(cartodb_exception,
+                                                       exception)
         end
 
         raise cartodb_exception
