@@ -60,7 +60,8 @@ module CartoDB
 
       def assert_in_options(attr, options, attr_name)
         assert_attr(attr, attr_name)
-        raise InvalidConfiguration.new("#{attr_name} is not a valid option. Should be any of: #{options.join(', ')}") unless options.include? attr
+        exception_message = "#{attr_name} is not a valid option. Should be any of: #{options.join(', ')}"
+        raise InvalidConfiguration.new(exception_message) unless options.include? attr
       end
 
     end
