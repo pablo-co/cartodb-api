@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Pablo Cárdenas']
   spec.email         = ['pcardenasoliveros@gmail.com']
 
-  spec.summary       = %q{A wrapper for MailChimp API 3.0}
-  spec.description   = %q{A wrapper for MailChimp API 3.0}
+  spec.summary       = %q{A wrapper for CartoDB's API}
+  spec.description   = %q{CartoDB::Api is an API wrapper for CartoDB written in Ruby}
   spec.homepage      = 'https://github.com/pablo-co/cartodb-api'
   spec.license       = 'MIT'
 

@@ -1,8 +1,10 @@
+[![Code Climate](https://codeclimate.com/github/pablo-co/cartodb-api/badges/gpa.svg)](https://codeclimate.com/github/pablo-co/cartodb-api)
+
+[![Test Coverage](https://codeclimate.com/github/pablo-co/cartodb-api/badges/coverage.svg)](https://codeclimate.com/github/pablo-co/cartodb-api/coverage)
+
 # CartoDB::Api
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/cartodb/api`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+CartoDB::Api is an API library for Ruby which acts as a wrapper for [CartoDB's API](cartodb.com). All requests are built using a really simple fluid interface.
 
 ## Installation
 
@@ -28,11 +30,13 @@ TODO: Write usage instructions here
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+To install this gem onto your local machine, run `bundle exec rake install`.
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/cartodb-api. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/pablo-co/cartodb-api. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](contributor-covenant.org) code of conduct.
+
+There are also a few guidelines that we need contributors to follow so that we can have a chance of keeping on top of things. These are detailed in the [Contributing guidelines](contributor-covenant.org).
 
 
 ## License
