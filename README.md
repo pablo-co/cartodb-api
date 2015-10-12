@@ -25,7 +25,7 @@ Or install it yourself as:
 All requests need a configuration object. The first thing you need is to create one.
 
 ```ruby
-configuration = CartoDB::Api:Configuration.new
+configuration = CartoDB::Api::Configuration.new
 ```
 
 The configuration defines all the details regarding the API requests.
@@ -97,11 +97,21 @@ To retrieve a specific import.
 cartodb.imports('<import id>').retrieve
 ```
 
-You can also specify the params, headers and body when calling a CRUD method. For example:
+You can also specify the params, headers, body and payload when calling a CRUD method. For example:
 
-To create a new import
 ```ruby
-cartodb.imports.create(headers: {some_header: 'header_value'}, params: {some_param: 'param_value'})
+cartodb.imports.create(
+    headers: {
+        some_header: 'header_value'
+    },
+    params: {
+        some_param: 'param_value'
+    },
+    body: body,
+    payload: {
+        file: Faraday::UploadIO.new('<file>', '<mime type>')
+    }
+)
 ```
 
 All requests can be written inline without the need to create a Request object:
@@ -109,6 +119,21 @@ All requests can be written inline without the need to create a Request object:
 ```ruby
 CartoDB::Api.imports.retrieve
 CartoDB::Api.imports('<import id>').retrieve
+```
+
+### Uploading files
+
+To upload files along the request you need to pass a payload. This library uses the excellent [Faraday](https://github.com/lostisland/faraday) library, thus files are sent using the `Faraday::UploadIO` class.
+```ruby
+Faraday::UploadIO.new('<file>', '<mime type>')
+```
+__Please note that the mime type depends on the file you are sending.__
+
+For example to create a new import from a csv file.
+
+```ruby
+csv_file = Faraday::UploadIO.new('file.csv', 'text/csv')
+CartoDB::Api.imports.create(payload: {file: csv_file})
 ```
 
 ### Handling errors
