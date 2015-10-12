@@ -20,20 +20,20 @@ module CartoDB
         self
       end
 
-      def create(params = nil, headers = nil, body = nil)
-        make_request(:post, params, headers, body)
+      def create(params: nil, headers: nil, body: nil, payload: nil)
+        make_request(:post, params: params, headers: headers, body: body, payload: payload)
       end
 
-      def update(params = nil, headers = nil, body = nil)
-        make_request(:patch, params, headers, body)
+      def update(params: nil, headers: nil, body: nil, payload: nil)
+        make_request(:patch, params: params, headers: headers, body: body, payload: payload)
       end
 
-      def retrieve(params = nil, headers = nil)
-        make_request(:get, params, headers)
+      def retrieve(params: nil, headers: nil)
+        make_request(:get, params: params, headers: headers)
       end
 
-      def delete(params = nil, headers = nil)
-        make_request(:delete, params, headers)
+      def delete(params: nil, headers: nil)
+        make_request(:delete, params: params, headers: headers)
       end
 
       protected
@@ -43,17 +43,19 @@ module CartoDB
       end
 
       def client
-        Faraday.new(url: url) do |client|
+        Faraday.new do |client|
           client.params['api_key'] = api_key
           client.response :raise_error
+          client.request :multipart
+          client.request :url_encoded
           client.adapter Faraday.default_adapter
         end
       end
 
-      def make_request(method, params = nil, headers = nil, body = nil)
+      def make_request(method, params: nil, headers: nil, body: nil, payload: nil)
         begin
-          response = client.send(method) do |request|
-            configure_request(request, params, headers, body)
+          response = client.send(method, url, payload) do |request|
+            configure_request(request, params: params, headers: headers, body: body, payload: payload)
           end
         rescue => e
           rescue_error(e)
@@ -61,9 +63,9 @@ module CartoDB
         parse(response.body)
       end
 
-      def configure_request(request, params = nil, headers = nil, body = nil)
+      def configure_request(request, params: nil, headers: nil, body: nil, payload: nil)
         request.params.merge!(params) if params
-        request.headers['Content-Type'] = 'application/json'
+        request.headers['Content-Type'] = 'application/json' unless payload
         request.headers.merge!(headers) if headers
         request.body = body if body
         request.options.timeout = timeout
