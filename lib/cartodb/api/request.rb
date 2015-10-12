@@ -21,11 +21,19 @@ module CartoDB
       end
 
       def create(params: nil, headers: nil, body: nil, payload: nil)
-        make_request(:post, params: params, headers: headers, body: body, payload: payload)
+        make_request(:post,
+                     params: params,
+                     headers: headers,
+                     body: body,
+                     payload: payload)
       end
 
       def update(params: nil, headers: nil, body: nil, payload: nil)
-        make_request(:patch, params: params, headers: headers, body: body, payload: payload)
+        make_request(:patch,
+                     params: params,
+                     headers: headers,
+                     body: body,
+                     payload: payload)
       end
 
       def retrieve(params: nil, headers: nil)
@@ -55,7 +63,11 @@ module CartoDB
       def make_request(method, params: nil, headers: nil, body: nil, payload: nil)
         begin
           response = client.send(method, url, payload) do |request|
-            configure_request(request, params: params, headers: headers, body: body, payload: payload)
+            configure_request(request,
+                              params: params,
+                              headers: headers,
+                              body: body,
+                              payload: payload)
           end
         rescue => e
           rescue_error(e)
