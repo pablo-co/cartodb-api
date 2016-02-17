@@ -3,24 +3,25 @@ module CartoDB
     class Request
       extend Forwardable
 
-      attr_accessor :configuration
+      attr_reader :path
 
       def_delegators :configuration, :protocol, :domain, :api_key,
                      :account, :base_url, :version, :timeout
 
-      def initialize(configuration)
-        self.configuration = configuration
-        reset
+      def initialize(configuration = nil)
+        self.configuration = CartoDB::Api.build_configuration(configuration)
+        reset_path
       end
 
       def method_missing(method, *args)
-        @path_steps << method.downcase
-        @path_steps << args if args.length > 0
-        @path_steps.flatten!
+        path_steps << method.downcase
+        path_steps << args unless args.empty?
+        path_steps.flatten!
         self
       end
 
       def create(params: nil, headers: nil, body: nil, payload: nil)
+        build_and_reset_path
         make_request(:post,
                      params: params,
                      headers: headers,
@@ -29,6 +30,7 @@ module CartoDB
       end
 
       def update(params: nil, headers: nil, body: nil, payload: nil)
+        build_and_reset_path
         make_request(:patch,
                      params: params,
                      headers: headers,
@@ -37,17 +39,32 @@ module CartoDB
       end
 
       def retrieve(params: nil, headers: nil)
+        build_and_reset_path
         make_request(:get, params: params, headers: headers)
       end
 
       def delete(params: nil, headers: nil)
+        build_and_reset_path
         make_request(:delete, params: params, headers: headers)
       end
 
       protected
 
-      def reset
-        @path_steps = []
+      attr_accessor :configuration
+
+      attr_accessor :path_steps
+
+      def reset_path
+        self.path_steps = []
+      end
+
+      def build_path
+        @path = path_steps.join('/')
+      end
+
+      def build_and_reset_path
+        build_path
+        reset_path
       end
 
       def client
@@ -109,12 +126,8 @@ module CartoDB
         "v#{version}/"
       end
 
-      def path
-        @path_steps.join('/')
-      end
-
       def rescue_error(exception)
-        cartodb_exception = Error.new(exception.message)
+        cartodb_exception = ApiError.new(exception.message)
 
         is_faraday_exception = exception.is_a?(Faraday::Error::ClientError)
         if is_faraday_exception && exception.response
@@ -122,14 +135,14 @@ module CartoDB
                                                        exception)
         end
 
-        raise cartodb_exception
+        fail cartodb_exception
       end
 
       def build_error_from_faraday(cartodb_exception, exception)
         cartodb_exception.status_code = exception.response[:status]
         begin
           response = MultiJson.load(exception.response[:body])
-          build_error(cartodb_exception,
+          cartodb_exception = build_error(cartodb_exception,
                       response['title'],
                       response['detail'],
                       response,
@@ -144,6 +157,7 @@ module CartoDB
         exception.details = details if details
         exception.body = body
         exception.raw_body = raw_body if raw_body
+        exception
       end
     end
   end
