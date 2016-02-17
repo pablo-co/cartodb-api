@@ -32,10 +32,18 @@ module CartoDB
         @@default_configuration = configuration
       end
 
+      def build_configuration(configuration = nil)
+        if configuration
+          default_configuration.dup.merge(configuration)
+        else
+          default_configuration.dup
+        end
+      end
+
       protected
 
       def build_request(configuration = nil)
-        configuration = configuration ? default_configuration.merge(configuration) : default_configuration.dup
+        configuration = build_configuration(configuration)
         CartoDB::Api::Request.new(configuration)
       end
 
@@ -44,7 +52,6 @@ module CartoDB
       def default_configuration
         @@default_configuration ||= CartoDB::Api::Configuration.new
       end
-
     end
   end
 end
